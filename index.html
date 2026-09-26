@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>College Demo eCommerce</title>
+</head>
+<body style="font-family: sans-serif; text-align: center; margin-top: 100px; background-color: #f4f4f9;">
+    
+    <h2>College Project: Secure Checkout Demo</h2>
+    <div style="border: 1px solid #ccc; padding: 20px; width: 300px; margin: 0 auto; background: white; border-radius: 8px;">
+        <h3>Engineering Textbook</h3>
+        <p>Price: ₹500</p>
+        <button id="buy-btn" style="padding: 10px 20px; font-size: 16px; background-color: #528FF0; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+            Buy Now
+        </button>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.getElementById('buy-btn').onclick = async function () {
+            const response = await fetch('/checkout', { method: 'POST' });
+            const orderData = await response.json();
+
+            var options = {
+                "key": "YOUR_TEST_KEY", 
+                "amount": orderData.amount,
+                "currency": "INR",
+                "name": "College Project Demo",
+                "description": "Textbook Purchase",
+                "order_id": orderData.gateway_order_id,
+                "handler": function (response){
+                    alert("Payment UI Completed! Check your Python terminal to see the database webhook update.");
+                },
+                "theme": { "color": "#528FF0" }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        };
+    </script>
+</body>
+</html>
